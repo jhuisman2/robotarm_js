@@ -32,6 +32,9 @@ function set_level(f_id){
 		console.log("The level has to be between 1 and 15");
 	} else {
 		exercise = f_id;
+		for (var i = 0; i <= station_count - 1; i++) {
+			robot_arm.assembly_line[i] = levels["exercise_" + exercise][i];	
+		}
 	}
 }
 
@@ -63,7 +66,9 @@ function draw_arm(){
   		}
 
   		brush = current_color;
-  		//draw_rectangle(left + 1, top + 1, block_width, block_height);
+  		if(arm.holding != null){
+  			draw_rectangle(left + 1, top + 1, block_width, block_height);
+  		}
   	}
 }
 
@@ -107,31 +112,37 @@ function draw_assembly_line(){
 		draw_line(left, line_position, right, line_position);
    		draw_line(left, line_position - 5, left, line_position);
     	draw_line(right, line_position - 5, right, line_position);
-
-      	robot_arm.assembly_line[i] = levels["exercise_" + exercise][i];
+    	
+    		
+    	
     	// stack is the current table of blocks 
     	var stack = robot_arm.assembly_line[i];
+console.log(stack);	
     	if(stack != null){
 	        for (var level = 0; level <= stack.length -1  ; level++) {
-	          if(robot_arm.assembly_line[i][level] != null){
-	            console.log(robot_arm.assembly_line[i][level]);
+	          
+	          if(stack[level] != null){
+	          	
+	            
 	            var current_color = 'white';
 
-	            if(robot_arm.assembly_line[i][level] == "r" || robot_arm.assembly_line[i][level] =="red"){
+	            if(stack[level] == "r" || stack[level] =="red"){
 	              current_color = "red";
 	            } 
 
-	            if(robot_arm.assembly_line[i][level] == "g" || robot_arm.assembly_line[i][level] =="green"){
+	            if(stack[level] == "g" || stack[level] =="green"){
 	              current_color = "green";
 	            } 
 
-	            if(robot_arm.assembly_line[i][level] == "b" || robot_arm.assembly_line[i][level] =="blue"){
+	            if(stack[level] == "b" || stack[level] =="blue"){
 	              current_color = "blue";
 	            }
 
 	            brush = current_color;
+
+	            draw_rectangle(left + 5, line_position - block_height * (level + 1) - (4 * (level + 1)) , block_width, block_height);	
 	          }
-	          draw_rectangle(left + 5, line_position - block_height * (level + 1) - (4 * (level + 1)) , block_width, block_height);
+	         	
 	        }
     		
     	}
@@ -220,7 +231,7 @@ function move_left(){
 }
 
 function grab(){
-	var stack = robot_arm.assembly_line[arm.position + 1];
+	var stack = robot_arm.assembly_line[arm.position];
 	var grab_level = level_count - stack.length;
 
 	if(stack.length == 0){
@@ -234,13 +245,43 @@ function grab(){
 	animate_arm('level', 0, grab_level, max_duration);
 
 	if( arm.holding == null ){
-		arm.holding = stack[stack.length - 2];
-		stack[stack.length - 2] = null;
+		arm.holding = stack[stack.length - 1];
+		stack.splice(stack.length - 1, 1);
 	}
 
+	console.log("Arm contains: " + arm.holding);
+	robot_arm.assembly_line[arm.position] = stack;
 	animate_arm('level', grab_level, 0, max_duration);
   	increase_actions();
 
+}
+
+
+function drop(){
+	var stack = robot_arm.assembly_line[arm.position];
+	if(stack != undefined){
+		var drop_level = level_count - (stack.length - 1);	
+	} else {
+		var drop_level = 0;
+		stack = [];
+	}
+	
+	stack.push(arm.holding);
+	robot_arm.assembly_line[arm.position] = stack;
+;
+	arm.holding = null;
+
+	animate_arm('level', drop_level, 0, max_duration);
+	increase_actions();
+}
+
+function automate(){
+	move_right();
+	move_right();
+ 	grab();
+ 	move_right();
+ 	move_right();
+ 	drop();
 }
 
 
@@ -248,7 +289,8 @@ jQuery(document).ready(function(){
  set_level(9);
  draw_arm();
  draw_assembly_line();
-
+ automate();
+ console.log(arm.actions);
 });
 
 
