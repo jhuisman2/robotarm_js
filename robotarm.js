@@ -92,13 +92,11 @@ function draw_line(f_horizontal_start, f_vertical_start, f_horizontal_end, f_ver
 function draw_rectangle(f_horizontal_start, f_vertical_start, f_width, f_height){
 	var frame = document.getElementById("frame");
 	var ctx = frame.getContext("2d");
-	ctx.lineWidth=4;
-	ctx.rect(f_horizontal_start,f_vertical_start,f_width,f_height);
-	ctx.strokeStyle = "#000000";
-  	ctx.stroke();
-
 	ctx.fillStyle = brush;
-	ctx.fill();
+    ctx.fillRect(f_horizontal_start,f_vertical_start,f_width,f_height);
+    ctx.strokeStyle = "#000000";
+    ctx.lineWidth   = 4;
+    ctx.strokeRect(f_horizontal_start,f_vertical_start,f_width,f_height);
 }
 
 function draw_assembly_line(){
@@ -117,12 +115,12 @@ function draw_assembly_line(){
     	
     	// stack is the current table of blocks 
     	var stack = robot_arm.assembly_line[i];
-console.log(stack);	
+
     	if(stack != null){
 	        for (var level = 0; level <= stack.length -1  ; level++) {
 	          
 	          if(stack[level] != null){
-	          	
+
 	            
 	            var current_color = 'white';
 
@@ -140,7 +138,13 @@ console.log(stack);
 
 	            brush = current_color;
 
-	            draw_rectangle(left + 5, line_position - block_height * (level + 1) - (4 * (level + 1)) , block_width, block_height);	
+
+	            if(i > 3){
+	            	console.log(stack[level] + ' - ' +brush);
+	            }
+	            
+
+	            draw_rectangle(left + 5, line_position - (block_height * (level + 1)) - (4 * (level + 1)) , block_width, block_height);	
 	          }
 	         	
 	        }
@@ -280,6 +284,10 @@ function automate(){
 	move_right();
  	grab();
  	move_right();
+ 	move_right();
+ 	drop();
+ 	move_left();
+ 	grab();
  	move_right();
  	drop();
 }
