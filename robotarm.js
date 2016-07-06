@@ -28,13 +28,15 @@ var framerate = (1000 / 30); // 1000 ms = 1 sec. 30 frames a sec.
 
 
 function set_level(f_id){
-	if(f_id < 1 || f_id > 15){
-		console.log("The level has to be between 1 and 15");
+	if(f_id < 1 || f_id > 15 || isNaN(f_id)){
+		console.log("ERROR: The level has to be between 1 and 15");
 	} else {
 		exercise = f_id;
 		for (var i = 0; i <= station_count - 1; i++) {
 			robot_arm.assembly_line[i] = levels["exercise_" + exercise][i];	
 		}
+		draw_arm();
+ 		draw_assembly_line();
 	}
 }
 
@@ -70,11 +72,6 @@ function draw_arm(){
   			draw_rectangle(left + 1, top + 1, block_width, block_height);
   		}
   	}
-}
-
-function get_color_from_holding(){
-	// fix for getting the fillcolor of an object
-	return 'b';
 }
 
 function draw_line(f_horizontal_start, f_vertical_start, f_horizontal_end, f_vertical_end){
@@ -137,13 +134,6 @@ function draw_assembly_line(){
 	            }
 
 	            brush = current_color;
-
-
-	            if(i > 3){
-	            	console.log(stack[level] + ' - ' +brush);
-	            }
-	            
-
 	            draw_rectangle(left + 5, line_position - (block_height * (level + 1)) - (4 * (level + 1)) , block_width, block_height);	
 	          }
 	         	
@@ -252,12 +242,33 @@ function grab(){
 		arm.holding = stack[stack.length - 1];
 		stack.splice(stack.length - 1, 1);
 	}
-
-	console.log("Arm contains: " + arm.holding);
 	robot_arm.assembly_line[arm.position] = stack;
 	animate_arm('level', grab_level, 0, max_duration);
   	increase_actions();
 
+}
+
+function scan(){
+	var stack = robot_arm.assembly_line[arm.position];
+	if(stack != undefined){
+		var grab_level = level_count - stack.length;
+
+		if(stack.length == 0){
+			grab_level = grab_level - 1;
+		}
+
+		if (arm.holding != null){
+			grab_level = grab_level - 1;
+		}
+
+		if( stack[stack.length - 1] == null || stack[stack.length - 1] == undefined){
+			return 'none';
+		} else {
+			return stack[stack.length - 1];
+		}
+	} else {
+		return 'none';
+	}
 }
 
 
@@ -279,26 +290,9 @@ function drop(){
 	increase_actions();
 }
 
-function automate(){
-	move_right();
-	move_right();
- 	grab();
- 	move_right();
- 	move_right();
- 	drop();
- 	move_left();
- 	grab();
- 	move_right();
- 	drop();
-}
-
-
 jQuery(document).ready(function(){
- set_level(9);
- draw_arm();
- draw_assembly_line();
- automate();
- console.log(arm.actions);
+ 	robot_arm_moves();
+ 	document.title = "RobotArm - " + arm.actions + " actions";
 });
 
 
