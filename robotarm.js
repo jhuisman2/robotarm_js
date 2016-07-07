@@ -308,7 +308,6 @@ var levels = {
 levels['exercise_8'] = levels['exercise_5'];
 
 function get_generated_level(f_id){
-	console.log(f_id);
 	var colors = ["red", "green", "white", "blue"];
 	robot_arm.assembly_line ={};
 	switch(f_id) {
