@@ -30,8 +30,8 @@ function set_level(f_id){
 		console.log("ERROR: The level has to be between 1 and 15");
 	} else {
 		exercise = f_id;
-		for (var i = 0; i <= station_count - 1; i++) {
-			robot_arm.assembly_line[i] = levels["exercise_" + exercise][i];	
+		for (var tempI = 0; tempI <= station_count - 1; tempI++) {
+			robot_arm.assembly_line[tempI] = levels["exercise_" + exercise][tempI];	
 		}
 		frame = document.getElementById("frame");
 		ctx = frame.getContext("2d");
@@ -92,8 +92,8 @@ function draw_rectangle(f_horizontal_start, f_vertical_start, f_width, f_height)
 
 function draw_assembly_line(){
 
-	for (var i = 0; i <= station_count - 1; i++) {
-		var left = i * station_width;
+	for (var tempI = 0; tempI <= station_count - 1; tempI++) {
+		var left = tempI * station_width;
 		var right = left + station_width;
 
 		draw_line(left, line_position, right, line_position);
@@ -101,7 +101,7 @@ function draw_assembly_line(){
     	draw_line(right, line_position - 5, right, line_position);
     	
     	// stack is the current table of blocks 
-    	var stack = robot_arm.assembly_line[i];
+    	var stack = robot_arm.assembly_line[tempI];
 
     	if(stack != null){
 	        for (var level = 0; level <= stack.length -1  ; level++) {
@@ -312,38 +312,38 @@ function get_generated_level(f_id){
 	robot_arm.assembly_line ={};
 	switch(f_id) {
 	    case 11:
-	 		for(var counter = 2; counter <= station_count - 1; counter++){
+	 		for(var tempI = 2; tempI <= station_count - 1; tempI++){
 				var color = colors[Math.round((Math.random() * (colors.length - 1 )) )];
-				robot_arm.assembly_line[counter] = [color ];
+				robot_arm.assembly_line[tempI] = [color ];
 			}
 	        break;
 	    case 12:
-        	for(var counter = 1; counter <= (station_count - 2); counter++){
+        	for(var tempI = 1; tempI <= (station_count - 2); tempI++){
         		var color = colors[Math.round((Math.random() * (colors.length - 1 )) )];
-				robot_arm.assembly_line[counter] = [color ];
+				robot_arm.assembly_line[tempI] = [color ];
         	}
 	        break;
 	    case 13:
-        	for(var counter = 1; counter <= (station_count - 1); counter++){
+        	for(var tempI = 1; tempI <= (station_count - 1); tempI++){
         		var color = colors[Math.round((Math.random() * (colors.length - 1 )) )];
-				robot_arm.assembly_line[counter] = [color ];
+				robot_arm.assembly_line[tempI] = [color ];
         	}
 	    	break;
 	    case 14:
-	    	for(var counter = 2; counter <= (station_count - 1); counter++){
-	    		robot_arm.assembly_line[counter] = [];
+	    	for(var tempI = 2; tempI <= (station_count - 1); tempI++){
+	    		robot_arm.assembly_line[tempI] = [];
 	    		for(var subcounter = 1; subcounter <= (Math.floor((Math.random() * (3) + 1))) ; subcounter++){
 	    			var color = colors[Math.round((Math.random() * (colors.length - 1 )) )]; 
-	    			robot_arm.assembly_line[counter].push(color);
+	    			robot_arm.assembly_line[tempI].push(color);
 	    		}
 	    	}
 	    	break;
 	    case 15:
 	    	colors = ["red", "green", "white", "blue", "none", "none"];
-	    	for(var counter = 1; counter <= (station_count - 1); counter++){
+	    	for(var tempI = 1; tempI <= (station_count - 1); tempI++){
 	    		var color = colors[Math.round((Math.random() * (colors.length - 1 )) )]; 
 	    		if(color != "none"){
-	    			robot_arm.assembly_line[counter] = [color];
+	    			robot_arm.assembly_line[tempI] = [color];
 	    		}
 	    	}
 	    	break;
