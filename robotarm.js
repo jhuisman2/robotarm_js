@@ -279,7 +279,7 @@ function drop(){
 }
 
 jQuery(document).ready(function(){
- 	robot_arm_moves();
+	$("head").append('<script type="text/javascript" src="input.js"></script>');
  	document.title = "RobotArm - " + arm.actions + " actions";
 });
 

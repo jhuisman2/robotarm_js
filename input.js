@@ -1,5 +1,2 @@
-function robot_arm_moves(){
-	set_level(1);
+set_level(12);
 
-
-}
